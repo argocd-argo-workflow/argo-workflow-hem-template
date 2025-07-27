@@ -5,29 +5,26 @@ name: Helm Chart CI/CD
 on:
   pull_request:
     branches:
-      - main # Or 'master', depending on your default branch
+      - main
     paths:
-      - 'my-argo-workflow-chart/**' # Trigger only if changes are in your chart directory
-      - '.github/workflows/helm-ci.yaml' # Also trigger if the workflow file itself changes
+      - 'my-argo-workflow-chart/**'
+      - '.github/workflows/helm-ci.yaml'
   push:
     branches:
-      - main # Or 'master'
+      - main
     paths:
-      - 'my-argo-workflow-chart/**' # Trigger only if changes are in your chart directory
-      - '.github/workflows/helm-ci.yaml' # Also trigger if the workflow file itself changes
+      - 'my-argo-workflow-chart/**'
+      - '.github/workflows/helm-ci.yaml'
 
 env:
   CHART_DIR: my-argo-workflow-chart
   CHART_REPO_BRANCH: gh-pages
   # IMPORTANT: Replace with your actual GitHub username and repository name
-  CHART_REPO_URL: https://<YOUR_GITHUB_USERNAME>.github.io/<YOUR_REPO_NAME>/
-  # Keywords in commit message to trigger a release and tag
-  # You can add more, e.g., 'feat:', 'release:', 'major:', 'minor:', 'patch:'
-  RELEASE_KEYWORDS: 'fix:,feat:,chore: release' # Comma-separated list
+  CHART_REPO_URL: https://sonawaneu777.github.io/argo-workflow-hem-template/
 
 # Define permissions at the workflow level for simplicity and clarity
 permissions:
-  contents: write # Grant write permission to the GITHUB_TOKEN for pushing code and tags
+  contents: write # Grant write permission to the GITHUB_TOKEN for pushing
   pages: write    # Grant write permission for GitHub Pages deployment
   id-token: write # Required for OIDC, if you plan to use it (good practice to include)
 
@@ -42,7 +39,7 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v1
         with:
-          version: v3.15.0 # Use a specific Helm version
+          version: v3.15.0
 
       - name: Run Helm Lint
         run: |
@@ -54,17 +51,12 @@ jobs:
     name: Package and Publish Helm Chart
     runs-on: ubuntu-latest
     needs: lint-chart
-    if: |
-      github.event_name == 'push' && contains(env.RELEASE_KEYWORDS, github.event.head_commit.message)
-      # Explanation of 'if' condition:
-      # - github.event_name == 'push': Ensures this job only runs on push events (e.g., after merging a PR).
-      # - contains(env.RELEASE_KEYWORDS, github.event.head_commit.message): Checks if any of the
-      #   defined RELEASE_KEYWORDS exist within the message of the head commit of the push.
+    if: github.event_name == 'push' # Only run this job on push events (after merge)
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Required for operations across branches (like gh-pages) AND for Git tagging
+          fetch-depth: 0 # Required for operations across branches (like gh-pages)
 
       - name: Set up Helm
         uses: azure/setup-helm@v1
@@ -79,22 +71,6 @@ jobs:
           echo "CHART_VERSION=$CHART_VERSION" >> $GITHUB_OUTPUT
           echo "Detected chart version: $CHART_VERSION"
 
-      # --- NEW STEP: Create GitHub Tag ---
-      - name: Create GitHub Release Tag
-        run: |
-          TAG_NAME="v${{ steps.get_version.outputs.CHART_VERSION }}"
-          echo "Attempting to create tag: $TAG_NAME"
-          # Check if tag already exists before creating
-          if git rev-parse $TAG_NAME >/dev/null 2>&1; then
-              echo "Tag $TAG_NAME already exists. Skipping tag creation."
-          else
-              git config user.name "github-actions[bot]"
-              git config user.email "github-actions[bot]@users.noreply.github.com"
-              git tag $TAG_NAME
-              git push origin $TAG_NAME
-              echo "Created and pushed tag: $TAG_NAME"
-          fi
-
       - name: Package Helm Chart
         id: package_chart
         run: |
@@ -104,27 +80,38 @@ jobs:
           echo "Packaged chart: $PACKAGED_CHART_FILE"
           echo "PACKAGED_CHART_FILE=$PACKAGED_CHART_FILE" >> $GITHUB_OUTPUT
 
+      # --- NEW / MODIFIED STEPS FOR ROBUST PUBLISHING ---
+
       - name: Prepare Chart Repository Directory
         run: |
+          # Create a temporary directory to build the gh-pages content
           mkdir -p .helm_repo_temp
 
       - name: Checkout Helm Chart Repository Branch
+        # Checkout the gh-pages branch into the temporary directory
+        # This allows us to merge the index.yaml correctly
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.repository }}
-          ref: ${{ env.CHART_REPO_BRANCH }}
-          path: .helm_repo_temp
-          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }} # Checkout the same repository
+          ref: ${{ env.CHART_REPO_BRANCH }} # Checkout the gh-pages branch
+          path: .helm_repo_temp # Checkout into the temporary directory
+          token: ${{ secrets.GITHUB_TOKEN }} # Use GITHUB_TOKEN for authentication
 
       - name: Add New Chart to Repository
         run: |
+          # Copy the newly packaged chart to the temporary repo directory
           cp ${{ steps.package_chart.outputs.PACKAGED_CHART_FILE }} .helm_repo_temp/
 
       - name: Generate/Update Helm Repository Index
         run: |
-          helm repo index .helm_repo_temp/ --url ${{ env.CHART_REPO_URL }} --merge
+          # Generate or update the index.yaml file in the temporary repo directory
+          # --merge is crucial to add new charts to existing index.yaml
+          # --url points to the public URL where the charts will be served
+          helm repo index .helm_repo_temp/ --url ${{ env.CHART_REPO_URL }}
 
       - name: Commit and Push to GitHub Pages
+        # Use a simple Git push since we've prepared the .helm_repo_temp
+        # This approach provides more control and clarity than peaceiris/actions-gh-pages
         run: |
           cd .helm_repo_temp
           git config user.name "github-actions[bot]"
