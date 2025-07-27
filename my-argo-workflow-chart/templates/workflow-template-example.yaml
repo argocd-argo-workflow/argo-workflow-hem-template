@@ -1,0 +1,19 @@
+# my-argo-workflow-chart/templates/workflow-template-example.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: {{ include "my-argo-workflow-chart.fullname" . }}-hello-template
+  namespace: {{ .Release.Namespace }}
+spec:
+  entrypoint: whalesay
+  templates:
+    - name: whalesay
+      inputs:
+        parameters:
+          - name: message
+            # Default value for demonstration, can be overridden
+            value: "Hello from Argo Workflows Helm!"
+      container:
+        image: docker/whalesay
+        command: [cowsay]
+        args: ["{{ "{{ inputs.parameters.message }}" }}"]
