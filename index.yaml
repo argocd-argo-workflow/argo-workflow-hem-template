@@ -10,7 +10,7 @@ entries:
     name: my-argo-workflow-chart
     type: application
     urls:
-    - https://sonawaneu777.github.io/argo-workflow-hem-template/my-argo-workflow-chart-3.0.0.tgz
+    - https://argocd-argo-workflow.github.io/argo-workflow-hem-template/my-argo-workflow-chart-3.0.0.tgz
     version: 3.0.0
   - apiVersion: v2
     appVersion: "1"
@@ -21,7 +21,7 @@ entries:
     name: my-argo-workflow-chart
     type: application
     urls:
-    - https://sonawaneu777.github.io/argo-workflow-hem-template/my-argo-workflow-chart-2.0.0.tgz
+    - https://argocd-argo-workflow.github.io/argo-workflow-hem-template/my-argo-workflow-chart-2.0.0.tgz
     version: 2.0.0
   - apiVersion: v2
     appVersion: "1"
@@ -32,7 +32,7 @@ entries:
     name: my-argo-workflow-chart
     type: application
     urls:
-    - https://sonawaneu777.github.io/argo-workflow-hem-template/my-argo-workflow-chart-2.tgz
+    - https://argocd-argo-workflow.github.io/argo-workflow-hem-template/my-argo-workflow-chart-2.tgz
     version: "2"
   - apiVersion: v2
     appVersion: "1"
@@ -43,7 +43,7 @@ entries:
     name: my-argo-workflow-chart
     type: application
     urls:
-    - https://sonawaneu777.github.io/argo-workflow-hem-template/my-argo-workflow-chart-0.1.1.tgz
+    - https://argocd-argo-workflow.github.io/argo-workflow-hem-template/my-argo-workflow-chart-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
     appVersion: "1"
@@ -54,6 +54,6 @@ entries:
     name: my-argo-workflow-chart
     type: application
     urls:
-    - https://sonawaneu777.github.io/argo-workflow-hem-template/my-argo-workflow-chart-0.1.0.tgz
+    - https://argocd-argo-workflow.github.io/argo-workflow-hem-template/my-argo-workflow-chart-0.1.0.tgz
     version: 0.1.0
 generated: "2025-07-27T13:03:07.263562113Z"
