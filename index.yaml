@@ -3,7 +3,18 @@ entries:
   my-argo-workflow-chart:
   - apiVersion: v2
     appVersion: "1"
-    created: "2025-07-27T10:33:22.21573032Z"
+    created: "2025-07-27T10:36:20.063458451Z"
+    description: A Helm chart for Kubernetes
+    digest: e95a7c64f86f4f1f07ad784953468d75ccb8da5572bf6bfff8e55b93e667a141
+    icon: https://argoproj.github.io/argo-workflows/assets/logo.png
+    name: my-argo-workflow-chart
+    type: application
+    urls:
+    - https://sonawaneu777.github.io/argo-workflow-hem-template/my-argo-workflow-chart-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: "1"
+    created: "2025-07-27T10:36:20.063084937Z"
     description: A Helm chart for Kubernetes
     digest: ea5f01c2f4bfe4849a7e9237c7104d32f98541c331cbdd5fd06422c3b8300e0f
     icon: https://argoproj.github.io/argo-workflows/assets/logo.png
@@ -12,4 +23,4 @@ entries:
     urls:
     - https://sonawaneu777.github.io/argo-workflow-hem-template/my-argo-workflow-chart-0.1.0.tgz
     version: 0.1.0
-generated: "2025-07-27T10:33:22.215250112Z"
+generated: "2025-07-27T10:36:20.062522843Z"
