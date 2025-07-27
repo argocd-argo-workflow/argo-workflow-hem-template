@@ -20,7 +20,7 @@ env:
   CHART_DIR: my-argo-workflow-chart
   CHART_REPO_BRANCH: gh-pages
   # IMPORTANT: Replace with your actual GitHub username and repository name
-  CHART_REPO_URL: https://<YOUR_GITHUB_USERNAME>.github.io/<YOUR_REPO_NAME>/
+  CHART_REPO_URL: https://sonawaneu777.github.io/argo-workflow-hem-template/
 
 # Define permissions at the workflow level for simplicity and clarity
 permissions:
